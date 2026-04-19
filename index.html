@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warfarin Dose Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 { color: #2c3e50; text-align: center; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #219150; }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>คำนวณขนาดยา Warfarin</h2>
+    
+    <div class="input-group">
+        <label for="currentDose">ขนาดยาปัจจุบัน (mg/สัปดาห์):</label>
+        <input type="number" id="currentDose" placeholder="เช่น 21" step="0.1">
+    </div>
+
+    <div class="input-group">
+        <label for="targetINR">ค่า INR ปัจจุบัน:</label>
+        <input type="number" id="currentINR" placeholder="เช่น 1.5" step="0.1">
+    </div>
+
+    <button onclick="calculateDose()">คำนวณขนาดยาใหม่</button>
+
+    <div id="result" class="success"></div>
+</div>
+
+<script>
+    function calculateDose() {
+        const dose = parseFloat(document.getElementById('currentDose').value);
+        const inr = parseFloat(document.getElementById('currentINR').value);
+        const resultDiv = document.getElementById('result');
+
+        if (isNaN(dose) || isNaN(inr)) {
+            alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+            return;
+        }
+
+        let message = "";
+        let newDose = dose;
+
+        // ตัวอย่าง Logic การปรับยาแบบพื้นฐาน (ควรปรับตามแนวทางเวชปฏิบัติที่ใช้จริง)
+        if (inr < 2.0) {
+            newDose = dose * 1.15; // เพิ่ม 15%
+            message = `INR ต่ำกว่าเป้าหมาย: ควรเพิ่มยาเป็นประมาณ ${newDose.toFixed(2)} mg/สัปดาห์`;
+        } else if (inr > 3.0) {
+            newDose = dose * 0.85; // ลด 15%
+            message = `INR สูงกว่าเป้าหมาย: ควรลดยาลงเหลือประมาณ ${newDose.toFixed(2)} mg/สัปดาห์`;
+        } else {
+            message = `INR อยู่ในเกณฑ์ปกติ: ใช้ขนาดยาเดิม ${dose} mg/สัปดาห์`;
+        }
+
+        resultDiv.innerHTML = message;
+        resultDiv.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
